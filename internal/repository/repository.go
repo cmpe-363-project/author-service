@@ -100,9 +100,9 @@ func (r *MysqlRepository) Close() error {
 	return sqlDB.Close()
 }
 
-func (r *MysqlRepository) GetAuthorByID(id int) (*Author, error) {
-	var author Author
-	if err := r.db.First(&author, id).Error; err != nil {
+func (r *MysqlRepository) GetAuthorsByIDs(ids []int) ([]Author, error) {
+	var authors []Author
+	if err := r.db.Find(&authors, ids).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, ErrNotFound
 		}
@@ -110,5 +110,5 @@ func (r *MysqlRepository) GetAuthorByID(id int) (*Author, error) {
 		return nil, err
 	}
 
-	return &author, nil
+	return authors, nil
 }

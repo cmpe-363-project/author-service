@@ -4,43 +4,53 @@ import (
 	"author-service/internal/repository"
 	restapiutils "author-service/internal/restapi/utils"
 	"author-service/pkg/logger"
-	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
-// HandleGetAuthor
-// /api/authors/{id}
-func HandleGetAuthor(logger logger.Logger, repo repository.MysqlRepository) http.HandlerFunc {
-	type Response struct {
+// HandleGetAuthors
+// /api/authors/by-id
+func HandleGetAuthors(logger logger.Logger, repo repository.MysqlRepository) http.HandlerFunc {
+	type ResponseItem struct {
 		ID   int    `json:"id"`
 		Name string `json:"name"`
 	}
 
+	type Response struct {
+		Items []ResponseItem `json:"items"`
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		id := r.PathValue("id")
+		ids := r.URL.Query().Get("id")
 
-		idInt, err := strconv.Atoi(id)
-		if err != nil {
-			http.Error(w, "Invalid author ID", http.StatusBadRequest)
-			return
-		}
-
-		author, err := repo.GetAuthorByID(idInt)
-		if err != nil {
-			if errors.Is(err, repository.ErrNotFound) {
-				w.WriteHeader(http.StatusNotFound)
+		idsIntList := []int{}
+		for _, idStr := range strings.Split(ids, ",") {
+			idInt, err := strconv.Atoi(idStr)
+			if err != nil {
+				http.Error(w, "Invalid author ID: "+idStr, http.StatusBadRequest)
 				return
 			}
+			idsIntList = append(idsIntList, idInt)
+		}
 
-			logger.ErrorWithCtx(r.Context(), "GetAuthorByID query failed", "error", err.Error())
+		authors, err := repo.GetAuthorsByIDs(idsIntList)
+		if err != nil {
+			logger.ErrorWithCtx(r.Context(), "GetAuthorsByIDs query failed", "error", err.Error())
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
+		respItems := []ResponseItem{}
+		for _, author := range authors {
+			respItems = append(respItems, ResponseItem{
+				ID:   author.ID,
+				Name: author.Name,
+			})
+		}
+
 		resp := Response{
-			ID:   author.ID,
-			Name: author.Name,
+			Items: respItems,
 		}
 		restapiutils.WriteJSONResponse(w, http.StatusOK, resp)
 	}

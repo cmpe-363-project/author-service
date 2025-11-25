@@ -36,10 +36,22 @@ docker exec author-service-mysql mysql -uroot -proot author_service -e "INSERT I
     }
     ```
 
-- `GET /api/authors/{id}`
+- `GET /api/authors/by-id?id=1,2,3`
   - ```json
     {
-      "id": 1,
-      "name": "Author Name",
+      "items": [
+        {
+          "id": 1,
+          "name": "Author Name"
+        },
+        {
+          "id": 2,
+          "name": "Author One"
+        },
+        {
+          "id": 3,
+          "name": "Author Two"
+        }
+      ]
     }
     ```

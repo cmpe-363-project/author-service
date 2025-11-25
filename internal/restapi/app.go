@@ -20,7 +20,7 @@ type App struct {
 func (a *App) SetupAndRun() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /api/authors/{id}", routes.HandleGetAuthor(a.Logger, a.Repository))
+	mux.HandleFunc("GET /api/authors/by-id", routes.HandleGetAuthors(a.Logger, a.Repository))
 	mux.HandleFunc("GET /api/version", routes.HandleGetVersion(a.Version))
 
 	server := &http.Server{
