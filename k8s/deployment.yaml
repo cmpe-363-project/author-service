@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: author-service
-          image: registry.gitlab.com/cmpe363-project/author-service:v0.0.0
+          image: registry.gitlab.com/berk-karaal/cmpe363-project/author-service:v0.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
