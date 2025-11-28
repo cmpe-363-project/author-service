@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: author-service
-        image: erayalp/cmpe-363-author-service:latest
+        image: registry.gitlab.com/berk-karaal/cmpe363-project/author-service:v0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8082
