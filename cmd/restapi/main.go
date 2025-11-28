@@ -1,26 +1,22 @@
 package main
 
 import (
-	"author-service/internal/repository"
+	hardcodedrepository "author-service/internal/repository/hardcoded_adapter"
 	"author-service/internal/restapi"
 	"author-service/pkg/logger/slog"
-	"time"
 
 	"github.com/caarlos0/env/v11"
-	gormLogger "gorm.io/gorm/logger"
 )
 
 type EnvVars struct {
-	Version string `env:"VERSION,required"`
-
 	Host string `env:"HOST,required"`
 	Port int    `env:"PORT,required"`
 
-	DBHost     string `env:"DB_HOST,required"`
-	DBPort     int    `env:"DB_PORT,required"`
-	DBUser     string `env:"DB_USER,required"`
-	DBPassword string `env:"DB_PASSWORD,required"`
-	DBName     string `env:"DB_NAME,required"`
+	// DBHost     string `env:"DB_HOST,required"`
+	// DBPort     int    `env:"DB_PORT,required"`
+	// DBUser     string `env:"DB_USER,required"`
+	// DBPassword string `env:"DB_PASSWORD,required"`
+	// DBName     string `env:"DB_NAME,required"`
 }
 
 func main() {
@@ -33,29 +29,31 @@ func main() {
 		panic(err)
 	}
 
-	gormLogLevel := gormLogger.Info
+	// gormLogLevel := gormLogger.Info
 
-	repo, err := repository.NewMysqlRepository(repository.NewMysqlRepositoryConfig{
-		Host:            envVars.DBHost,
-		Port:            envVars.DBPort,
-		Username:        envVars.DBUser,
-		Password:        envVars.DBPassword,
-		Database:        envVars.DBName,
-		MaxOpenConns:    10,
-		MaxIdleConns:    3,
-		ConnMaxLifetime: time.Minute * 3,
-		LogLevel:        &gormLogLevel,
-		AutoMigrate:     true,
-	})
-	if err != nil {
-		logger.Error("Failed to create MySQL repository", "error", err.Error())
-		panic(err)
-	}
+	// repo, err := repository.NewMysqlRepository(repository.NewMysqlRepositoryConfig{
+	// 	Host:            envVars.DBHost,
+	// 	Port:            envVars.DBPort,
+	// 	Username:        envVars.DBUser,
+	// 	Password:        envVars.DBPassword,
+	// 	Database:        envVars.DBName,
+	// 	MaxOpenConns:    10,
+	// 	MaxIdleConns:    3,
+	// 	ConnMaxLifetime: time.Minute * 3,
+	// 	LogLevel:        &gormLogLevel,
+	// 	AutoMigrate:     true,
+	// })
+	// if err != nil {
+	// 	logger.Error("Failed to create MySQL repository", "error", err.Error())
+	// 	panic(err)
+	// }
+
+	repo := hardcodedrepository.NewHardcodedRepository()
 
 	app := &restapi.App{
-		Version:    envVars.Version,
+		Version:    "v0.0.1",
 		Logger:     logger,
-		Repository: *repo,
+		Repository: repo,
 		Port:       envVars.Port,
 		Host:       envVars.Host,
 	}

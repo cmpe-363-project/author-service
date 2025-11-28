@@ -11,7 +11,7 @@ import (
 
 // HandleGetAuthors
 // /api/authors/by-id
-func HandleGetAuthors(logger logger.Logger, repo repository.MysqlRepository) http.HandlerFunc {
+func HandleGetAuthors(logger logger.Logger, repo repository.Repository) http.HandlerFunc {
 	type ResponseItem struct {
 		ID   int    `json:"id"`
 		Name string `json:"name"`
