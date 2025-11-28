@@ -10,3 +10,4 @@ services:
       PORT: ${PORT}
     ports:
       - '${PORT}:${PORT}'
+    network_mode: host
