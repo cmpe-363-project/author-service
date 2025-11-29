@@ -15,9 +15,11 @@ spec:
       labels:
         app: author-service
     spec:
+      imagePullSecrets:
+      - name: gitlab-registry-secret
       containers:
       - name: author-service
-        image: registry.gitlab.com/berk-karaal/cmpe363-project/author-service:v0
+        image: registry.gitlab.com/berk-karaal/cmpe363-project/author-service:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8082
