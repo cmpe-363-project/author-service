@@ -15,11 +15,6 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: main
-      
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64,amd64
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -40,7 +35,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             registry.gitlab.com/berk-karaal/cmpe363-project/author-service:${{ steps.tag.outputs.tag }}
