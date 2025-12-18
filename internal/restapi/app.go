@@ -22,6 +22,7 @@ func (a *App) SetupAndRun() {
 
 	mux.HandleFunc("GET /api/authors/by-id", routes.HandleGetAuthors(a.Logger, a.Repository))
 	mux.HandleFunc("GET /api/version", routes.HandleGetVersion(a.Version))
+	mux.HandleFunc("GET /api/mock-memory", routes.HandleAutoScalingDemo(a.Logger))
 
 	server := &http.Server{
 		Addr:    a.Host + ":" + strconv.Itoa(a.Port),
