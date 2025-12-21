@@ -26,7 +26,7 @@ func main() {
 	repo := hardcodedrepository.NewHardcodedRepository()
 
 	app := &restapi.App{
-		Version:    "v0.0.2.2",
+		Version:    "v0.0.2.3",
 		Logger:     logger,
 		Repository: repo,
 		Port:       envVars.Port,
