@@ -36,15 +36,19 @@ jobs:
           username: ${{ secrets.GITLAB_USERNAME }}
           password: ${{ secrets.GITLAB_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
+          push: false
           platforms: linux/${{ matrix.arch }}
           tags: ${{ env.IMAGE }}:${{ github.ref_name }}-${{ matrix.arch }}
           cache-from: type=registry,ref=${{ env.IMAGE }}:latest
           cache-to: type=inline
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.IMAGE }}:${{ github.ref_name }}-${{ matrix.arch }}
 
   manifest:
     needs: build
